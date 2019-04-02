@@ -17,7 +17,7 @@ public class SimulationManager implements Runnable {
 	private int maxProcessingTime = 9;
 	private int numberOfQueues = 4;
 	private int numberOfClients = 100;
-	private int maxClientsPerQueue = 10;
+	private int maxClientsPerQueue = 15;
 	private Policy selectionPolicy = Policy.SHORTEST_TIME;
 	
 	private SimulatorFrame frame;
@@ -103,6 +103,13 @@ public class SimulationManager implements Runnable {
 			
 			generatedClients = generateRandomClients(numberOfClients, minProcesingTime, maxProcessingTime, timeLimit);
 			
+			// Prepare to find the peak hour
+			int peakHour = 0;
+			int peakWaiting = 0;
+			
+			// Prepare to find average waiting time
+			int totalWaitingTime = 0;
+			
 			// Begin simulation
 			scheduler.start();
 			for(int currentTime = 0; currentTime <= timeLimit; ++currentTime) {
@@ -113,11 +120,20 @@ public class SimulationManager implements Runnable {
 					if (c.getArrivalTime() == currentTime) {
 						frame.getLoggingArea().addTextLine("Dispatching client " + c.toString());
 						scheduler.dispatchCustomer(c);
+						
+						totalWaitingTime += c.getFinishTime() - c.getArrivalTime();
 					}
 				}
 				
 				// Update UI
 				frame.displayData(scheduler.getQueueDescriptions());
+				
+				// Check for peak hour
+				int waitingRightNow = scheduler.getCustomerCount();
+				if(waitingRightNow > peakWaiting) {
+					peakHour = currentTime;
+					peakWaiting = waitingRightNow;
+				}
 				
 				// Skip one second
 				try {
@@ -127,8 +143,12 @@ public class SimulationManager implements Runnable {
 					e.printStackTrace();
 				}
 			}
-			
 			scheduler.endSimulation();
+			
+			// Announce the peak hour and other statistics
+			frame.getLoggingArea().addTextLine("Peak hour: " + peakHour + " with " + peakWaiting + " waiting people.");
+			frame.getLoggingArea().addTextLine("Average waiting time: " + totalWaitingTime / numberOfClients + ".");
+			
 			starting = false; // Set this value to false at the end, so the button must be re-pressed
 		}
 	}

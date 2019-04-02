@@ -129,4 +129,19 @@ public class QueueScheduler {
 			s.endSimulation();
 		}
 	}
+	
+	/**
+	 * Counts the total number of clients that are still waiting across all queues.
+	 * Note that this does <b>not</b> include clients currently being served.
+	 * @return an integer representing the number of waiting clients
+	 */
+	public int getCustomerCount() {
+		int total = 0;
+		
+		for(CustomerServer s : queues) {
+			total += s.getNoOfClients();
+		}
+		
+		return total;
+	}
 }
