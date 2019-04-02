@@ -2,7 +2,9 @@ package view;
 
 import javax.swing.JTextArea;
 
-public class LoggingArea extends JTextArea {
+import controller.LogDisplay;
+
+public class LoggingArea extends JTextArea implements LogDisplay {
 	/**
 	 * Default-generated serialVersionUID
 	 */

@@ -5,6 +5,7 @@ import java.util.List;
 
 import model.strategy.Strategy;
 import model.strategy.Strategy.Policy;
+import controller.LogDisplay;
 import model.strategy.StrategyLowestNumber;
 import model.strategy.StrategyLowestTime;
 
@@ -24,8 +25,8 @@ public class QueueScheduler {
 			"Mira"
 	};
 
-	// Unused fields, kept because they may be useful in the future
 	private int maxNoQueues;
+	// Unused field, kept because it may be useful in the future
 	private int maxCustomersPerQueue;
 	
 	private List<CustomerServer> queues;
@@ -39,8 +40,9 @@ public class QueueScheduler {
 	 * @param simulationTime - maximum time to run the simulation for
 	 * @param maxNoQueues - maximum number of queues that can be active
 	 * @param maxCustomersPerQueue - maximum number of customers for each queue
+	 * @param logger - a LogDisplay element to which log events can be posted
 	 */
-	public QueueScheduler(int simulationTime, int maxNoQueues, int maxCustomersPerQueue) {
+	public QueueScheduler(int simulationTime, int maxNoQueues, int maxCustomersPerQueue, LogDisplay logger) {
 		// Initialise attributes
 		this.maxNoQueues = maxNoQueues;
 		this.maxCustomersPerQueue = maxCustomersPerQueue;
@@ -49,7 +51,7 @@ public class QueueScheduler {
 		// Initialise CustomerServers
 		queues = new ArrayList<CustomerServer>(maxNoQueues);
 		for(int i = 0; i < maxNoQueues; ++i) {
-			CustomerServer server = new CustomerServer(names[i % names.length], maxCustomersPerQueue);
+			CustomerServer server = new CustomerServer(names[i % names.length], maxCustomersPerQueue, logger);
 			
 			queues.add(server);
 		}

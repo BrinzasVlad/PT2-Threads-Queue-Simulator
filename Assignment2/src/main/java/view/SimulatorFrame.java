@@ -1,26 +1,38 @@
 package view;
 
-import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 public class SimulatorFrame extends JFrame {
-
 	// This is just a default value; we don't really need it
 	private static final long serialVersionUID = 1L;
 	
-	private JPanel mainPanel;
-	private JPanel simulationPanel;
-	private JButton startButton;
-	private LoggingArea logDisplay;
+	private static final String[] strategies = {"Shortest queue", "Shortest time"};
 	
+	private JPanel mainPanel;
+	private JPanel settingsPanel;
+	private JPanel simulationPanel;
+	private LoggingArea logDisplay;
+	private JButton startButton = new JButton("Start");
+	
+	private JTextField timeField = new JTextField("100");
+	private JTextField queuesField = new JTextField("4");
+	private JTextField minServField = new JTextField("2");
+	private JTextField maxServField = new JTextField("9");
+	private JTextField clientsField = new JTextField("100");
+	private JComboBox<String> strategyBox = new JComboBox<String>(strategies);
+
 	private static final int WIDTH = 600, HEIGHT = 600;
 	
 	public SimulatorFrame() {
@@ -32,21 +44,38 @@ public class SimulatorFrame extends JFrame {
 		//mainPanel.setLayout(new BorderLayout());
 		mainPanel.setLayout(new GridLayout(0, 1));
 		this.add(mainPanel); // TODO: should we set it as the content pane, too?
+			settingsPanel = new JPanel();
+			settingsPanel.setLayout(new BoxLayout(settingsPanel, BoxLayout.Y_AXIS));
+			mainPanel.add(settingsPanel);
+				JPanel hiddenSettingsPanel = new JPanel(new GridLayout(3,4));
+				settingsPanel.add(hiddenSettingsPanel);
+					hiddenSettingsPanel.add(new JLabel("Simulation time"));
+					hiddenSettingsPanel.add(timeField);
+					
+					hiddenSettingsPanel.add(new JLabel("No. of queues"));
+					hiddenSettingsPanel.add(queuesField);
+					
+					hiddenSettingsPanel.add(new JLabel("Min. serve time"));
+					hiddenSettingsPanel.add(minServField);
+					
+					hiddenSettingsPanel.add(new JLabel("Max. serve time"));
+					hiddenSettingsPanel.add(maxServField);
+					
+					hiddenSettingsPanel.add(new JLabel("No. of clients"));
+					hiddenSettingsPanel.add(clientsField);
+					
+					hiddenSettingsPanel.add(new JLabel("Strategy"));
+					hiddenSettingsPanel.add(strategyBox);
+				settingsPanel.add(startButton);
+			simulationPanel = new JPanel();
+			//mainPanel.add(simulationPanel, BorderLayout.CENTER); // TODO: add it in a good position relative to the other elements to come
+			mainPanel.add(simulationPanel);
 		
-		startButton = new JButton("Start");
-		//mainPanel.add(startButton, BorderLayout.NORTH);
-		mainPanel.add(startButton);
-		
-		simulationPanel = new JPanel();
-		//mainPanel.add(simulationPanel, BorderLayout.CENTER); // TODO: add it in a good position relative to the other elements to come
-		mainPanel.add(simulationPanel);
-		
-		logDisplay = new LoggingArea();
-		JScrollPane hiddenDisplayScroller = new JScrollPane(logDisplay);
-		//mainPanel.add(hiddenDisplayScroller, BorderLayout.SOUTH);
-		mainPanel.add(hiddenDisplayScroller);
-		
-		this.setVisible(true); // TODO: should we really set it visible here?
+			logDisplay = new LoggingArea();
+			JScrollPane hiddenDisplayScroller = new JScrollPane(logDisplay);
+			//mainPanel.add(hiddenDisplayScroller, BorderLayout.SOUTH);
+			mainPanel.add(hiddenDisplayScroller);
+		this.setVisible(true);
 	}
 	
 	/**
@@ -88,6 +117,38 @@ public class SimulatorFrame extends JFrame {
 	
 	public LoggingArea getLoggingArea() {
 		return logDisplay;
+	}
+	
+	public String getTime() {
+		return timeField.getText();
+	}
+	
+	public String getClients() {
+		return clientsField.getText();
+	}
+	
+	public String getMinServeTime() {
+		return minServField.getText();
+	}
+	
+	public String getMaxServeTime() {
+		return maxServField.getText();
+	}
+	
+	public String getNoQueues() {
+		return queuesField.getText();
+	}
+	
+	/**
+	 * Returns the selected strategy, with the following meanings:
+	 * <ol start="0">
+	 * <li> Shortest queue </li>
+	 * <li> Shortest time </li>
+	 * </ol>
+	 * @return an integer representing the selected strategy
+	 */
+	public int getStrategy() {
+		return strategyBox.getSelectedIndex();
 	}
 
 }

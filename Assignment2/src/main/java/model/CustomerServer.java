@@ -4,6 +4,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import controller.LogDisplay;
+
 public class CustomerServer implements Runnable {
 	
 	private String name;
@@ -12,18 +14,25 @@ public class CustomerServer implements Runnable {
 	private AtomicInteger waitingTime;
 	
 	private boolean simulationOver = false;
+	
+	private LogDisplay logger;
 
 	/**
 	 * Creates a new CustomerServer with the given name, with an empty queue
 	 * of the given capacity and a default waiting time of initially zero.
 	 * @param name - the name of this CustomerServer, which will be displayed
 	 * 				 in its {@link #toString()} method.
+	 * @param maxTasks - the maximum number of Customers in queue that this
+	 * 					 CustomerServer will accept
+	 * @param logger - a LogDisplay element to which events can be written
 	 */
-	public CustomerServer(String name, int maxTasks) {
+	public CustomerServer(String name, int maxTasks, LogDisplay logger) {
 		this.name = name;
 		
 		this.queue = new LinkedBlockingQueue<Customer>(maxTasks);
 		this.waitingTime = new AtomicInteger(0);
+		
+		this.logger = logger;
 	}
 
 	/**
@@ -35,8 +44,9 @@ public class CustomerServer implements Runnable {
 	 * 				 in its {@link #toString()} method.
 	 * @param queue - a BlockingQueue storing the initial Customers
 	 * @param waitingTime - the initial waiting time associated to the given queue
+	 * @param logger - a LogDisplay element to which events can be written
 	 */
-	public CustomerServer(String name, BlockingQueue<Customer> queue, int waitingTime) {
+	public CustomerServer(String name, BlockingQueue<Customer> queue, int waitingTime, LogDisplay logger) {
 		this.name = name;
 		
 		this.queue = queue;
@@ -55,6 +65,7 @@ public class CustomerServer implements Runnable {
 			
 			waitingTime.addAndGet(cust.getServingTime());
 			
+			logger.addTextLine(name + " received customer " + cust.toString());
 		} catch (InterruptedException e) {
 			System.out.println("Interrupted in addCustomer!");
 			e.printStackTrace(); // TODO do something better than this, since printStackTrace() pretty much makes our output above obsolete anyway
@@ -134,6 +145,7 @@ public class CustomerServer implements Runnable {
 					//this.wait(1000);
 				}
 				
+				logger.addTextLine(name + " finished serving customer " + currentlyServed.toString());
 			} catch (InterruptedException e) {
 				System.out.println("Interrupted in CustomerServer#run!");
 				e.printStackTrace(); // TODO do something better than this, since printStackTrace() pretty much makes our output above obsolete anyway

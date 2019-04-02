@@ -60,21 +60,30 @@ public class SimulationManager implements Runnable {
 	}
 	
 	/**
-	 * Collects the input data from the UI.
+	 * Collects the input data from the UI. Any incorrectly formatted
+	 * data will be ignored, using instead the last used values (or the default)
 	 * Currently gathered data:
 	 * <ul>
-	 * 	<li>None, just the signal to start</li>
+	 * 	<li> Total simulation time </li>
+	 * 	<li> Number of queues </li>
+	 * 	<li> Number of customers </li>
+	 * 	<li> Minimum and maximum serving time per customer </li>
+	 * 	<li> Customer allocation strategy </li>
 	 * </ul>
 	 */
 	private void gatherInputs() {
-		; // TODO: actually gather data
+		try { timeLimit = Integer.parseInt( frame.getTime() ); } catch (NumberFormatException e) {}
+		try { numberOfQueues = Integer.parseInt( frame.getNoQueues() ); } catch (NumberFormatException e) {}
+		try { numberOfClients = Integer.parseInt( frame.getClients() ); } catch (NumberFormatException e) {}
+		try { minProcesingTime = Integer.parseInt( frame.getMinServeTime() ); } catch (NumberFormatException e) {}
+		try { maxProcessingTime = Integer.parseInt( frame.getMaxServeTime() ); } catch (NumberFormatException e) {}
+		selectionPolicy = frame.getStrategy() == 0 ? Policy.SHORTEST_QUEUE : Policy.SHORTEST_TIME;
 	}
 
 	@Override
 	public void run() {
 		while(true) {
 			// Hacky way to not start until the button is pressed
-			// and to repeat whenever it's pressed again
 			while(!starting) {
 				try {
 					Thread.sleep(100);
@@ -83,14 +92,13 @@ public class SimulationManager implements Runnable {
 					e1.printStackTrace(); // TODO: same as always
 				}
 			}
-			starting = false; // TODO: unneeded
 			
 			// Preparatory phase
 			gatherInputs();
 			frame.getLoggingArea().setText("");
 			
 			// Initialise values
-			scheduler = new QueueScheduler(timeLimit, numberOfQueues, maxClientsPerQueue);
+			scheduler = new QueueScheduler(timeLimit, numberOfQueues, maxClientsPerQueue, frame.getLoggingArea());
 			scheduler.setStrategy(selectionPolicy);
 			
 			generatedClients = generateRandomClients(numberOfClients, minProcesingTime, maxProcessingTime, timeLimit);
