@@ -11,7 +11,7 @@ import model.strategy.StrategyLowestTime;
 
 public class QueueScheduler {
 	
-	private final String[] names = {
+	private final static String[] NAMES = {
 			"Bill",
 			"John",
 			"Vance",
@@ -27,6 +27,7 @@ public class QueueScheduler {
 
 	private int maxNoQueues;
 	// Unused field, kept because it may be useful in the future
+	@SuppressWarnings("unused")
 	private int maxCustomersPerQueue;
 	
 	private List<CustomerServer> queues;
@@ -51,7 +52,7 @@ public class QueueScheduler {
 		// Initialise CustomerServers
 		queues = new ArrayList<CustomerServer>(maxNoQueues);
 		for(int i = 0; i < maxNoQueues; ++i) {
-			CustomerServer server = new CustomerServer(names[i % names.length], maxCustomersPerQueue, logger);
+			CustomerServer server = new CustomerServer(NAMES[i % NAMES.length], maxCustomersPerQueue, logger);
 			
 			queues.add(server);
 		}
@@ -81,11 +82,11 @@ public class QueueScheduler {
 	 * @param cust - the Customer to be assigned to a queue
 	 */
 	public void dispatchCustomer(Customer cust) {
-		strategy.dispatchTask(cust, queues);
+		strategy.dispatchCustomer(cust, queues);
 	}
 	
 	/**
-	 * Starts the simulation as per the conditions set by {@link #QueueScheduler(int, int, int)}
+	 * Starts the simulation as per the conditions of {@link #QueueScheduler(int, int, int)}
 	 * and returns a list of Threads containing the threads that were generated.
 	 * @return a list of Threads containing one thread for each queue generated
 	 */

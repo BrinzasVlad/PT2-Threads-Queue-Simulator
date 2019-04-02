@@ -15,7 +15,7 @@ public class StrategyLowestTime implements Strategy {
 	 * @param queues - the CustomerServer queues to which to add the Customer
 	 */
 	@Override
-	public void dispatchTask(Customer cust, List<CustomerServer> queues) {
+	public void dispatchCustomer(Customer cust, List<CustomerServer> queues) {
 		// Find the CustomerServer with the lowest waiting time
 		CustomerServer target = queues.get(0);
 		for(CustomerServer server : queues) {

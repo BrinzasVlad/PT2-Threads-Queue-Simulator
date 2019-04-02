@@ -58,7 +58,7 @@ public class CustomerServer implements Runnable {
 	 * automatically increments the waiting time for the queue.
 	 * @param cust - the Customer to be added to queue
 	 */
-	public void addCustomer(Customer cust) { //TODO make sure we don't need "synchronised" here
+	public void addCustomer(Customer cust) {
 		try {
 			cust.computeFinishTime(waitingTime.get());
 			queue.put(cust);
@@ -68,7 +68,7 @@ public class CustomerServer implements Runnable {
 			logger.addTextLine(name + " received customer " + cust.toString());
 		} catch (InterruptedException e) {
 			System.out.println("Interrupted in addCustomer!");
-			e.printStackTrace(); // TODO do something better than this, since printStackTrace() pretty much makes our output above obsolete anyway
+			e.printStackTrace();
 		}
 	}
 	
@@ -142,13 +142,13 @@ public class CustomerServer implements Runnable {
 				for(int i = currentlyServed.getServingTime(); i > 0; --i) {
 					waitingTime.decrementAndGet();
 					Thread.sleep(1000);
-					//this.wait(1000);
 				}
 				
-				logger.addTextLine(name + " finished serving customer " + currentlyServed.toString());
+				logger.addTextLine(name + " finished serving customer " +
+								   currentlyServed.toString());
 			} catch (InterruptedException e) {
 				System.out.println("Interrupted in CustomerServer#run!");
-				e.printStackTrace(); // TODO do something better than this, since printStackTrace() pretty much makes our output above obsolete anyway
+				e.printStackTrace();
 			}
 		}
 	}

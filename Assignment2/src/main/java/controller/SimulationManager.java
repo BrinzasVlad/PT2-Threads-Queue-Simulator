@@ -42,7 +42,7 @@ public class SimulationManager implements Runnable {
 	 * @param maxTime - a maximum bound on the client's time as per the description
 	 * @return a list of randomised Customers
 	 */
-	private List<Customer> generateRandomClients(int number, int minProcTime, int maxProcTime, int maxTime) {
+	protected List<Customer> generateRandomClients(int number, int minProcTime, int maxProcTime, int maxTime) {
 		List<Customer> customers = new ArrayList<Customer>(numberOfClients);
 		
 		Random rand = new Random();
@@ -71,7 +71,7 @@ public class SimulationManager implements Runnable {
 	 * 	<li> Customer allocation strategy </li>
 	 * </ul>
 	 */
-	private void gatherInputs() {
+	protected void gatherInputs() {
 		try { timeLimit = Integer.parseInt( frame.getTime() ); } catch (NumberFormatException e) {}
 		try { numberOfQueues = Integer.parseInt( frame.getNoQueues() ); } catch (NumberFormatException e) {}
 		try { numberOfClients = Integer.parseInt( frame.getClients() ); } catch (NumberFormatException e) {}
@@ -122,10 +122,9 @@ public class SimulationManager implements Runnable {
 				// Skip one second
 				try {
 					Thread.sleep(1000);
-					//this.wait(1000);
 				} catch (InterruptedException e) {
 					System.out.println("Interrupted in SimulationManager#run!");
-					e.printStackTrace(); // TODO do something better than this, since printStackTrace() pretty much makes our output above obsolete anyway
+					e.printStackTrace();
 				}
 			}
 			

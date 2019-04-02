@@ -23,8 +23,8 @@ public interface Strategy {
 	 * The exact CustomerServer chosen depends on the implementation.
 	 * @param cust - the Customer to be added to a queue
 	 * @param queues - the CustomerServer queues to which to add the Customer
-	 * @see StrategyLowestNumber#dispatchTask(Customer, List)
-	 * @see StrategyLowestTime#dispatchTask(Customer, List)
+	 * @see StrategyLowestNumber#dispatchCustomer(Customer, List)
+	 * @see StrategyLowestTime#dispatchCustomer(Customer, List)
 	 */
-	public void dispatchTask(Customer cust, List<CustomerServer> queues);
+	public void dispatchCustomer(Customer cust, List<CustomerServer> queues);
 }
