@@ -89,7 +89,7 @@ public class SimulationManager implements Runnable {
 					Thread.sleep(100);
 				} catch (InterruptedException e1) {
 					System.out.println("Interrupted while waiting to start");
-					e1.printStackTrace(); // TODO: same as always
+					e1.printStackTrace();
 				}
 			}
 			
